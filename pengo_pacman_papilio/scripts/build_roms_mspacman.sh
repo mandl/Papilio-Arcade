@@ -32,9 +32,11 @@ echo 1d8ac7ad03db2dc4c8c18ade466e12032673f874 u7
 echo 5e8b472b615f12efca3fe792410c23619f067845 5e
 echo fd6a1dde780b39aea76bf1c4befa5882573c2ef4 5f
 
+mkdir $rom_path
 rm -f $rom_path/gfx1.bin
 rm -f $rom_path/main1.bin
 rm -f $rom_path/main2.bin
+
 
 #concatenate consecutive ROM regions
 cat $rom_path_src/5e $rom_path_src/5f >> $rom_path/gfx1.bin

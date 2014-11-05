@@ -27,13 +27,13 @@ entity papilio_top is
 
 architecture RTL of papilio_top is
 	--	only set one of these
-	constant PENGO          : std_logic := '0'; -- set to 1 when using Pengo ROMs, 0 otherwise
-	constant PACMAN         : std_logic := '1'; -- set to 1 for all other Pacman hardware games
+	constant PENGO          : std_logic := '1'; -- set to 1 when using Pengo ROMs, 0 otherwise
+	constant PACMAN         : std_logic := '0'; -- set to 1 for all other Pacman hardware games
 
 	-- only set one of these when PACMAN is set
 	constant MRTNT          : std_logic := '0'; -- set to 1 when using Mr TNT ROMs, 0 otherwise
 	constant LIZWIZ         : std_logic := '0'; -- set to 1 when using Lizard Wizard ROMs, 0 otherwise
-	constant MSPACMAN       : std_logic := '1'; -- set to 1 when using Ms Pacman ROMs, 0 otherwise
+	constant MSPACMAN       : std_logic := '0'; -- set to 1 when using Ms Pacman ROMs, 0 otherwise
 
 	constant dipsw1_pengo   : std_logic_vector( 7 downto 0) := "11100000";
 --																					||||||||
@@ -212,16 +212,22 @@ begin
 ------------------------------------------------------------	
   button_in(8 downto 0) <= I_SW(8 downto 0);
   JOYSTICK_GND <= '0';
+   
   
-  u_debounce : entity work.BUTTON_DEBOUNCE
+  u_debounce : entity work.grp_debouncer
   generic map (
-    G_WIDTH => 9
+    N => 9,
+	 CNT_VAL => 1000000 -- 42 ms
     )
   port map (
-    I_BUTTON => button_in,
-    O_BUTTON => button_debounced,
-    CLK      => clk
+    clk_i  => clk,
+	 data_i => button_in,
+    data_o => button_debounced,
+    strb_o => open
     );
+	
+	dipsw1_reg <= dipsw1_pengo when PENGO = '1' else dipsw1_pacman ;
+	dipsw2_reg <= dipsw2_pengo when PENGO = '1' else (others=>'1') ;
 
   p_input_registers : process
 	begin
@@ -229,74 +235,71 @@ begin
 	  if I_RESET = '1' then
 	
 			in0_reg  <= (others=>'1');
-			in1_reg   <= (others=>'1');
-			
+			in1_reg  <= (others=>'1');
 		
 		else
-						if PENGO = '1' then
-					
-							-- pengo closed is low
---						 	in0_reg(6) <= '1';                 -- service
---							in1_reg(4) <= '1';                 -- test
-							in0_reg(4) <= button_debounced(6);     -- P1 coin "F1"
-							in0_reg(5) <= button_debounced(6);     -- P2 coin "F3"
-
-							in1_reg(5) <= button_debounced(7);     -- P1 start "F2"
-							in1_reg(6) <= button_debounced(7);     -- P2 start "F4"
-
-							in0_reg(7) <= button_debounced(4);     -- P1 jump "I"
-							in1_reg(7) <= button_debounced(4);     -- P2 jump "I"
-
-							in0_reg(0) <= button_debounced(0);     -- P1 up arrow
-							in1_reg(0) <= button_debounced(0);     -- P2 up arrow
-
-							in0_reg(1) <= button_debounced(1);     -- P1 down arrow
-							in1_reg(1) <= button_debounced(1);     -- P2 down arrow
-
-							in0_reg(2) <= button_debounced(3);      -- P1 left arrow
-							in1_reg(2) <= button_debounced(3);      -- P2 left arrow
-
-							in0_reg(3) <= button_debounced(2);     -- right
-							in1_reg(3) <= button_debounced(2);     -- right
-
-					
-				elsif PACMAN = '1' then
-					
-						-- pacman on is low
---						in0_reg(7) <= '1';                 -- coin
---						in0_reg(4) <= '1';                 -- test_l dipswitch (rack advance)
---						in1_reg(7) <= '1';                 -- table
---						in1_reg(4) <= '1';                 -- test
-						in0_reg(5) <= button_debounced(6);     -- P1 coin "F1"
-						in0_reg(6) <= button_debounced(6);     -- P2 coin "F3"
-
-						in1_reg(5) <= button_debounced(7);     -- P1 start "F2"
-						in1_reg(6) <= button_debounced(7);     -- P2 start "F4"
-
---						p1_jump  <= ps2_scancode(8);       -- P1 jump "I"
---						p2_jump  <= ps2_scancode(8);       -- P2 jump "I"
-
-						in0_reg(0) <= button_debounced(0);     -- up 
-						in1_reg(0) <= button_debounced(0);     -- up 
-
-						in0_reg(3) <= button_debounced(1);     -- down
-						in1_reg(3) <= button_debounced(1);     -- down
-
-						in0_reg(1) <=  button_debounced(3);     -- left
-						in1_reg(1) <=  button_debounced(3);     -- left
-
-						in0_reg(2) <= button_debounced(2);     -- P1 right
-						in1_reg(2) <= button_debounced(2);     -- P2 right
-
-					
-				end if;
+			
+			if PENGO = '1' then
 		
+			-- pengo closed is low
+         --	in0_reg(6) <= '1';                 -- service
+         -- in1_reg(4) <= '1';                 -- test
+			in0_reg(4) <= not button_debounced(6);     -- P1 coin "F1"
+			--in0_reg(5) <= not button_debounced(6);     -- P2 coin "F3"
+
+			in1_reg(5) <= not button_debounced(7);     -- P1 start "F2"
+			--in1_reg(6) <= not button_debounced(7);     -- P2 start "F4"
+
+			in0_reg(7) <= button_debounced(4);     -- P1 jump "I"
+			in1_reg(7) <= button_debounced(4);     -- P2 jump "I"
+
+			in0_reg(0) <= button_debounced(0);     -- P1 up arrow
+			in1_reg(0) <= button_debounced(0);     -- P2 up arrow
+
+			in0_reg(1) <= button_debounced(1);     -- P1 down arrow
+			in1_reg(1) <= button_debounced(1);     -- P2 down arrow
+
+			in0_reg(2) <= button_debounced(3);      -- P1 left arrow
+			in1_reg(2) <= button_debounced(3);      -- P2 left arrow
+
+			in0_reg(3) <= button_debounced(2);     -- right
+			in1_reg(3) <= button_debounced(2);     -- right
+
+	
+      elsif PACMAN = '1' then
+	
+		  -- pacman on is low
+        --	in0_reg(7) <= '1';                 -- coin
+        --	in0_reg(4) <= '1';                 -- test_l dipswitch (rack advance)
+        --	in1_reg(7) <= '1';                 -- table
+        --	in1_reg(4) <= '1';                 -- test
+		  in0_reg(5) <= not button_debounced(6);     -- P1 coin "F1"
+		  -- in0_reg(6) <= not button_debounced(6);     -- P2 coin "F3"
+
+		  in1_reg(5) <= not button_debounced(7);     -- P1 start "F2"
+		  -- in1_reg(6) <= not button_debounced(7);     -- P2 start "F4"
+
+        --	p1_jump  <= ps2_scancode(8);       -- P1 jump "I"
+        --	p2_jump  <= ps2_scancode(8);       -- P2 jump "I"
+
+		  in0_reg(0) <= button_debounced(0);     -- up 
+		  in1_reg(0) <= button_debounced(0);     -- up 
+
+		  in0_reg(3) <= button_debounced(1);     -- down
+		  in1_reg(3) <= button_debounced(1);     -- down
+
+		  in0_reg(1) <=  button_debounced(3);     -- left
+		  in1_reg(1) <=  button_debounced(3);     -- left
+
+		  in0_reg(2) <= button_debounced(2);     -- P1 right
+		  in1_reg(2) <= button_debounced(2);     -- P2 right
+	
+		 end if;
 		end if;
 	end process;
 	
 
-	dipsw1_reg <= dipsw1_pengo when PENGO = '1' else dipsw1_pacman ;
-	dipsw2_reg <= dipsw2_pengo when PENGO = '1' else (others=>'1') ;
+	
 	
 
 end RTL;
