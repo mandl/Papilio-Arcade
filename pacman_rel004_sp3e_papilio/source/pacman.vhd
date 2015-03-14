@@ -79,7 +79,15 @@ end;
 
 architecture RTL of PACMAN is
 
+<<<<<<< HEAD
     signal I_RESET_L        : std_logic;
+=======
+
+	constant HWSEL_PACMANICMINERMAN : boolean := false ; -- p2 joystick right used for jump, collides with default config.
+																			
+    
+	 signal I_RESET_L        : std_logic;
+>>>>>>> 2c4f8a8... pacman/pacmmm papilio duo, untested
     signal reset            : std_logic;
     signal clk_ref          : std_logic;
     signal clk              : std_logic;
@@ -524,7 +532,7 @@ begin
 
 	O_LED(0) <= control_reg(4);	-- P1 Start Lamp
 	O_LED(1) <= control_reg(5);	-- P2 Start Lamp	
-	O_LED(2) <= control_reg(3);	-- Flipped
+	-- O_LED(2) <= control_reg(3);	-- Flipped 
 
   p_control_reg : process
     variable ena : std_logic_vector(7 downto 0);

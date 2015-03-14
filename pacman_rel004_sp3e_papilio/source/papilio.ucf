@@ -72,7 +72,19 @@ NET "I_JOYSTICK_B(2)"               LOC = "P22" | IOSTANDARD = LVTTL | PULLUP ; 
 NET "I_JOYSTICK_B(3)"               LOC = "P23" | IOSTANDARD = LVTTL | PULLUP ; # 	Right
 NET "I_JOYSTICK_B(1)"               LOC = "P25" | IOSTANDARD = LVTTL | PULLUP ; # 	Down
 NET "I_JOYSTICK_B(4)"               LOC = "P32" | IOSTANDARD = LVTTL | PULLUP ; # 	Fire
+<<<<<<< HEAD
 NET "JOYSTICK_B_GND"          	  LOC = "P18"  | IOSTANDARD = LVTTL | PULLDOWN; # 	GND
+=======
+NET "JOYSTICK_B_GND"          	  LOC = "P18"  | IOSTANDARD = LVTTL | PULLDOWN; # 	GND
+
+# No real use for the LED's
+#NET O_LED(3)                    LOC = "P35" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
+#NET O_LED(2)                    LOC = "P40" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
+NET O_LED(1)                    LOC = "P53" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;		# P2 Start Lamp
+NET O_LED(0)                    LOC = "P57" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ; 	# P1 Start Lamp
+
+NET I_RESET                     LOC = "P67" | IOSTANDARD = LVTTL | PULLDOWN ; # 
+>>>>>>> 2c4f8a8... pacman/pacmmm papilio duo, untested
 
 # No real use for the LED's
 #NET O_LED(3)                    LOC = "P35" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
