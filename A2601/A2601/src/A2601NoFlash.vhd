@@ -32,8 +32,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity A2601NoFlash is
-   port (clk: in std_logic;
-			audio: out std_logic;
+   port (clk_in: in std_logic;
+			O_AUDIO_L: out std_logic;
+			O_AUDIO_R: out std_logic;
          O_VSYNC: out std_logic;
          O_HSYNC: out std_logic;
 			O_VIDEO_R: out std_logic_vector(3 downto 0);
@@ -56,7 +57,11 @@ entity A2601NoFlash is
          p_bs: out std_logic;			
 			LED: out std_logic_vector(2 downto 0);
 			
-			I_SW :in std_logic_vector(2 downto 0);
+			-- up  select
+			-- right game reset
+			-- left difficultiy
+			-- down difficultiy
+			I_SW :in std_logic_vector(4 downto 0);
 			
 			
          JOYSTICK_GND: out std_logic			;
@@ -66,16 +71,6 @@ end A2601NoFlash;
 
 architecture arch of A2601NoFlash is
 
-	COMPONENT a2601_dcm
-	PORT(
-		CLKIN_IN : IN std_logic; 
-		RST_IN : IN std_logic; 		
-		CLKFX_OUT : OUT std_logic;
-		CLKIN_IBUFG_OUT : OUT std_logic;
-		CLK0_OUT : OUT std_logic;
-		CLK2X_OUT : OUT std_logic
-		);
-	END COMPONENT;
 
     component A2601 is
     port(vid_clk: in std_logic;
@@ -106,6 +101,13 @@ architecture arch of A2601NoFlash is
 		clk : IN std_logic;
 		addr : IN std_logic_vector(13 downto 0);          
 		data : OUT std_logic_vector(7 downto 0)
+		);
+	END COMPONENT;
+	
+	COMPONENT config_rom
+	PORT(
+		clk : IN std_logic;
+		data : OUT std_logic_vector(3 downto 0)
 		);
 	END COMPONENT;
 	
@@ -141,12 +143,7 @@ architecture arch of A2601NoFlash is
              a: in std_logic_vector(6 downto 0));
     end component;
 
-    component CartTable is
-        port(clk: in std_logic;
-             d: out std_logic_vector(10 downto 0);
-             c: out std_logic_vector(6 downto 0);
-             a: in std_logic_vector(6 downto 0));
-    end component;
+    
     
 	 signal vid_clk, vid_clkx2: std_logic;
     signal d: std_logic_vector(7 downto 0);
@@ -180,8 +177,8 @@ architecture arch of A2601NoFlash is
 	 signal gsel: std_logic;
     signal p_fn: std_logic;
 
-		signal rst_cntr: unsigned(12 downto 0) := "0000000000000";
-		   signal sc_clk: std_logic;
+	 signal rst_cntr: unsigned(12 downto 0) := "0000000000000";
+    signal sc_clk: std_logic;
     signal sc_r: std_logic;
     signal sc_d_in: std_logic_vector(7 downto 0);
     signal sc_d_out: std_logic_vector(7 downto 0);
@@ -189,7 +186,7 @@ architecture arch of A2601NoFlash is
 
     subtype bss_type is std_logic_vector(2 downto 0);
 
-
+    
     signal bank: std_logic_vector(3 downto 0) := "0000";
     signal tf_bank: std_logic_vector(1 downto 0);
     signal e0_bank: std_logic_vector(2 downto 0);
@@ -201,26 +198,20 @@ architecture arch of A2601NoFlash is
     signal cpu_d: std_logic_vector(7 downto 0);
     signal cpu_r: std_logic;
 
-    signal cart_info: std_logic_vector(10 downto 0) := "00000000000";
-    signal cart_cntr: unsigned(6 downto 0) := "0000000";
-    signal cart_max: std_logic_vector(6 downto 0);
-    signal cart_vect: std_logic_vector(6 downto 0) := "0000000";
-
-    signal cart_next: std_logic;
-    signal cart_prev: std_logic;
-    signal cart_swch: std_logic := '0';
-    signal cart_next_l: std_logic;
-    signal cart_prev_l: std_logic;
+  
 	 signal sel: std_logic;
+	 signal audio : std_logic;
+	 
 --	 signal ctrl_cntr: unsigned(3 downto 0);
 	--tmp
 	signal cv:  std_logic_vector(7 downto 0);
 	signal au:  std_logic_vector(4 downto 0);
 -- switches
-	signal sw_toggle: std_logic_vector(2 downto 0) := "000";
+	signal sw_toggle: std_logic_vector(3 downto 0) := "0000";
+	signal sw_pressed: std_logic_vector(3 downto 0) := "0000";
 	
-	signal sw_pressed: std_logic_vector(2 downto 0) := "000";
-	
+	 -- http://atariage.com/2600/programming/bankswitch_sizes.txt
+	 
     constant BANK00: bss_type := "000";
     constant BANKF8: bss_type := "001";
     constant BANKF6: bss_type := "010";
@@ -228,23 +219,17 @@ architecture arch of A2601NoFlash is
     constant BANKE0: bss_type := "100";
     constant BANK3F: bss_type := "101";
 
-    signal bss: bss_type := BANK00; 	--bank switching method
+    signal bss: bss_type := BANK00; --bank switching method
     signal sc: std_logic := '0';		--superchip enabled or not
+	 signal card_config: std_logic_vector(3 downto 0); -- rom config
 	 
 begin
 	  
---	Inst_a2601_dcm: a2601_dcm PORT MAP(
---		CLKIN_IN => clk,
---		RST_IN => '0',		
---		CLKFX_OUT => vid_clk,
---		CLKIN_IBUFG_OUT => open,
---		CLK0_OUT => open,
---		CLK2X_OUT => vid_clkx2
---	);		
+
 
   u_clocks : entity work.PACMAN_CLOCKS
     port map (
-      I_CLK_REF  => clk,
+      I_CLK_REF  => clk_in,
       I_RESET_L  => '1',
       --
       O_CLK_REF  => open,
@@ -263,8 +248,11 @@ begin
 		data => d,
 		addr => a
 	);		 
-	--brd_CartTable: CartTable
-   --     port map(ph0, cart_info, cart_max, std_logic_vector(cart_cntr));
+	Inst_config_rom: config_rom PORT MAP(
+		clk => vid_clk,
+		data => card_config
+	);		 
+	
 	
 	dac_inst: dac 
 		port map(audio, au, vid_clk, '0');	
@@ -274,7 +262,13 @@ begin
       O_VIDEO_G(3 downto 1) <= rgbx2(15 downto 13);
       O_VIDEO_B(3 downto 2) <= rgbx2(7 downto 6);	
       O_HSYNC   <= hsyn;
-      O_VSYNC   <= vsyn;	
+      O_VSYNC   <= vsyn;
+		O_VIDEO_R(0) <='0';
+		O_VIDEO_G(0) <='0';
+		O_VIDEO_B(0) <='0';
+		O_VIDEO_B(1) <='0';
+		O_AUDIO_R <= audio;
+		O_AUDIO_L <= audio;
 
 --    cpu_d <= d when a(12) = '1' else "ZZZZZZZZ";
  process(ph0)
@@ -301,7 +295,7 @@ begin
             ctrl_cntr <= ctrl_cntr + 1;
             if (ctrl_cntr = "1111") then    -- p_bs
                 p_fn <=  p_a;
-                pb(0) <= not p_s; 
+                --pb(0) <= not p_s; 
             elsif (ctrl_cntr = "0111") then
                 pa(7 downto 4) <= p_r & p_l & p_d & p_u;
 					 pa(3 downto 0) <= p2_r & p2_l & p2_d & p2_u;
@@ -322,12 +316,14 @@ begin
 						end if;
 					end loop;
 					 sw_toggle(2) <= NOT(I_SW(2)); --momentary, not slide toggle -- should this be active low ?
-            end if;
+                sw_toggle(3) <= NOT(I_SW(3));
+				end if;
 
            -- pb(7) <= pa(7) or p_fn; --sw1
            -- pb(6) <= pa(6) or p_fn; --sw2
            -- pb(1) <= pa(4) or p_fn; --select
            -- pb(3) <= pa(5) or p_fn; --b/w / colour
+			  -- pb(0) start
         end if;
     end process;
 	 pb(7) <= sw_toggle(0);
@@ -337,6 +333,7 @@ begin
     pb(5) <= '1'; --nc ?
     pb(4) <= '1'; --nc
     pb(2) <= '1'; --nc
+	 pb(0) <= sw_toggle(3);
 	 
     -- inpt5 <= '1'; --FIXME --remove line if 2p works
 	 -- leds to show state of switches
@@ -354,16 +351,7 @@ begin
 
     au <= std_logic_vector(auv0 + auv1);
 
-    --process(vid_clk, sys_clk_dvdr)
-    --begin
-     --   if (vid_clk'event and vid_clk = '1') then
-     --       sys_clk_dvdr <= sys_clk_dvdr + 1;
-     --       if (sys_clk_dvdr = "11101") then
-     --           rst <= '0';
-     --       end if;
-     --   end if;
-    --end process;
-
+   
     sc_ram128x8: ram128x8
         port map(sc_clk, sc_r, sc_d_in, sc_d_out, sc_a);
 
@@ -463,13 +451,19 @@ begin
             end if;
         end if;
     end process;
-
-    --bss <= cart_info(3 downto 1);
-    --sc <= cart_info(0);
-    --cart_vect <= cart_info(10 downto 4);
-	--LED <= bss;
-    --cart_next <= (not pa(7)) and (not gsel);
-    --cart_prev <= (not pa(6)) and (not gsel);
+    
+	 -- config bankswitching mode
+	 process(vid_clk) 
+	 begin
+	 
+	 if( rising_edge (vid_clk)) then
+      bss <= card_config(3 downto 1); -- bankswitching
+      sc <= card_config(0);            -- superchip
+	 end if;
+	 
+	 end process;
+    
+	 
 end arch;
 
 

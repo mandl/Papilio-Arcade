@@ -34,5 +34,12 @@ ADDRESS_MAP avrmap PPC405 0
         END_BUS_BLOCK;		  
 		  
     END_ADDRESS_SPACE;
+	 
+	 ADDRESS_SPACE config_rom RAMB16 [0x00000000:0x000007FF]
+        BUS_BLOCK
+	    Inst_config_rom/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;	
 
 END_ADDRESS_MAP;

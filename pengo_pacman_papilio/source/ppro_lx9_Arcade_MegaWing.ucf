@@ -71,17 +71,39 @@ NET CLK_IN					LOC = "P94"  | IOSTANDARD = LVTTL; # 32.00 MHz oscillator
 NET O_AUDIO_L			LOC = "P98"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ; #
 NET O_AUDIO_R			LOC = "P100"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ; #
 NET I_RESET  				LOC = "P85"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST  ; # reset
-NET I_SW(0)					LOC = "P123"   | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# up
-NET I_SW(1)					LOC = "P126"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# down
-NET I_SW(2)					LOC = "P132"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# left
-NET I_SW(3)					LOC = "P127"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# right
-NET I_SW(6)					LOC = "P95"  | IOSTANDARD = LVTTL; 													# coin 1
-NET I_SW(4)					LOC = "P124"   | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ;	# button
-NET I_SW(5)					LOC = "P74"  | IOSTANDARD = LVTTL; 													# start 1
-NET I_SW(7)		     		LOC = "P59"  | IOSTANDARD = LVTTL; 													# start 2
-NET I_SW(8)					LOC = "P62"  | IOSTANDARD = LVTTL; 													# coin 2
-NET JOYSTICK_GND        LOC = "P131"  | IOSTANDARD = LVTTL;# 												# GND 		pin 8 of DB9 Joystick A connector
 
+#NET I_SW(0)					LOC = "P123"   | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# up
+#NET I_SW(1)					LOC = "P126"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# down
+#NET I_SW(2)					LOC = "P132"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# left
+#NET I_SW(3)					LOC = "P127"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ; 	# right
+#NET I_SW(6)					LOC = "P95"  | IOSTANDARD = LVTTL; 													# coin 1
+#NET I_SW(4)					LOC = "P124"   | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST | PULLUP ;	# button
+#NET I_SW(5)					LOC = "P74"  | IOSTANDARD = LVTTL; 													# start 1
+#NET I_SW(7)		     		LOC = "P59"  | IOSTANDARD = LVTTL; 													# start 2
+#NET I_SW(8)					LOC = "P62"  | IOSTANDARD = LVTTL; 													# coin 2
+#NET JOYSTICK_GND        LOC = "P131"  | IOSTANDARD = LVTTL;# 												# GND 		pin 8 of DB9 Joystick A connector
+
+# Tactile Pushbuttons
+NET I_SW(3)                     LOC = "P59" | IOSTANDARD = LVTTL;	#	Right Pushbutton - Start 2
+NET I_SW(2)                     LOC = "P62" | IOSTANDARD = LVTTL;	#	Down Pushbutton - Coin 1
+NET I_SW(1)                     LOC = "P95" | IOSTANDARD = LVTTL;	#	Up Pushbutton - Coin 2
+NET I_SW(0)                     LOC = "P74" | IOSTANDARD = LVTTL;	#	Left Pushbutton - Start 1
+
+# Papilio Arcade MegaWing - Joystick A
+NET "I_JOYSTICK_A(0)"               LOC = "P123" | IOSTANDARD = LVTTL | PULLUP ; # 	Up
+NET "I_JOYSTICK_A(2)"               LOC = "P132" | IOSTANDARD = LVTTL | PULLUP ; # 	Left	
+NET "I_JOYSTICK_A(3)"               LOC = "P127" | IOSTANDARD = LVTTL | PULLUP ; # 	Right	
+NET "I_JOYSTICK_A(1)"               LOC = "P126" | IOSTANDARD = LVTTL | PULLUP ; # 	Down 	
+NET "I_JOYSTICK_A(4)"               LOC = "P124" | IOSTANDARD = LVTTL | PULLUP ; # 	Fire 
+NET "JOYSTICK_A_GND"                LOC = "P131" | IOSTANDARD = LVTTL; # 	GND
+
+# Papilio Arcade MegaWing - Joystick B
+NET "I_JOYSTICK_B(0)"               LOC = "P57" | IOSTANDARD = LVTTL | PULLUP ; #  Up
+NET "I_JOYSTICK_B(2)"               LOC = "P51" | IOSTANDARD = LVTTL | PULLUP ; # 	Left	
+NET "I_JOYSTICK_B(3)"               LOC = "P47" | IOSTANDARD = LVTTL | PULLUP ; # 	Right
+NET "I_JOYSTICK_B(1)"               LOC = "P50" | IOSTANDARD = LVTTL | PULLUP ; # 	Down
+NET "I_JOYSTICK_B(4)"               LOC = "P55" | IOSTANDARD = LVTTL | PULLUP ; # 	Fire
+NET "JOYSTICK_B_GND"          	   LOC = "P48" | IOSTANDARD = LVTTL; # 	GND
 
 NET O_HSYNC			LOC = "P117"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ; #
 NET O_VSYNC			LOC = "P116"  | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ; #

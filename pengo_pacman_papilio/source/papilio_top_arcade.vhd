@@ -19,21 +19,28 @@ entity papilio_top is
 		-- audio
 		O_AUDIO_L             : out   std_logic;
 		O_AUDIO_R             : out   std_logic;
-		--- Joystick Interface ----------------------------
-		I_SW                  : in    std_logic_vector(8 downto 0);
-		JOYSTICK_GND          : out   std_logic
+	
+ 	   --- Joystick Interface ----------------------------
+	   I_JOYSTICK_A          : in    std_logic_vector(4 downto 0);
+	   I_JOYSTICK_B          : in    std_logic_vector(4 downto 0);
+	   JOYSTICK_A_GND			 : out	 std_logic;
+	   JOYSTICK_B_GND			 : out	 std_logic;
+	 
+       I_SW                  : in    std_logic_vector(3 downto 0) -- active high
+		
 	);
 	end;
 
 architecture RTL of papilio_top is
 	--	only set one of these
-	constant PENGO          : std_logic := '1'; -- set to 1 when using Pengo ROMs, 0 otherwise
-	constant PACMAN         : std_logic := '0'; -- set to 1 for all other Pacman hardware games
+	constant PENGO            : std_logic := '1'; -- set to 1 when using Pengo ROMs, 0 otherwise
+	constant PACMAN           : std_logic := '0'; -- set to 1 for all other Pacman hardware games
 
 	-- only set one of these when PACMAN is set
-	constant MRTNT          : std_logic := '0'; -- set to 1 when using Mr TNT ROMs, 0 otherwise
-	constant LIZWIZ         : std_logic := '0'; -- set to 1 when using Lizard Wizard ROMs, 0 otherwise
-	constant MSPACMAN       : std_logic := '0'; -- set to 1 when using Ms Pacman ROMs, 0 otherwise
+	constant MRTNT            : std_logic := '0'; -- set to 1 when using Mr TNT ROMs, 0 otherwise
+	constant LIZWIZ           : std_logic := '0'; -- set to 1 when using Lizard Wizard ROMs, 0 otherwise
+	constant MSPACMAN         : std_logic := '0'; -- set to 1 when using Ms Pacman ROMs, 0 otherwise
+	constant PACMANICMINERMAN : std_logic := '0'; -- set to 1 when using PacManicMinerMan ROMs, 0 otherwise
 
 	constant dipsw1_pengo   : std_logic_vector( 7 downto 0) := "11100000";
 --																					||||||||
@@ -105,8 +112,8 @@ architecture RTL of papilio_top is
 	signal audio            : std_logic_vector( 7 downto 0);
 	signal audio_pwm        : std_logic;
 
-	signal button_in        : std_logic_vector(8 downto 0);
-   signal button_debounced : std_logic_vector(8 downto 0);
+	signal button_in        : std_logic_vector(13 downto 0);
+   signal button_debounced : std_logic_vector(13 downto 0);
 
 
 begin
@@ -210,13 +217,18 @@ begin
 ------------------------------------------------------------
 -- Key debounce
 ------------------------------------------------------------	
-  button_in(8 downto 0) <= I_SW(8 downto 0);
-  JOYSTICK_GND <= '0';
+  
+  button_in(8 downto 5) <= I_SW(3 downto 0);
+  button_in(4 downto 0) <= I_JOYSTICK_A (4 downto 0);
+  button_in(13 downto 9)<= I_JOYSTICK_B (4 downto 0);
+
+  JOYSTICK_A_GND <= '0';
+  JOYSTICK_B_GND <= '0';
    
   
   u_debounce : entity work.grp_debouncer
   generic map (
-    N => 9,
+    N => 14,
 	 CNT_VAL => 1000000 -- 42 ms
     )
   port map (
@@ -238,7 +250,7 @@ begin
 			in1_reg  <= (others=>'1');
 		
 		else
-			
+			if (ena_6 = '1') then
 			if PENGO = '1' then
 		
 			-- pengo closed is low
@@ -251,19 +263,19 @@ begin
 			--in1_reg(6) <= not button_debounced(7);     -- P2 start "F4"
 
 			in0_reg(7) <= button_debounced(4);     -- P1 jump "I"
-			in1_reg(7) <= button_debounced(4);     -- P2 jump "I"
+			--in1_reg(7) <= button_debounced(4);     -- P2 jump "I"
 
 			in0_reg(0) <= button_debounced(0);     -- P1 up arrow
-			in1_reg(0) <= button_debounced(0);     -- P2 up arrow
+			--in1_reg(0) <= button_debounced(0);     -- P2 up arrow
 
 			in0_reg(1) <= button_debounced(1);     -- P1 down arrow
-			in1_reg(1) <= button_debounced(1);     -- P2 down arrow
+			--in1_reg(1) <= button_debounced(1);     -- P2 down arrow
 
 			in0_reg(2) <= button_debounced(3);      -- P1 left arrow
-			in1_reg(2) <= button_debounced(3);      -- P2 left arrow
+			--in1_reg(2) <= button_debounced(3);      -- P2 left arrow
 
 			in0_reg(3) <= button_debounced(2);     -- right
-			in1_reg(3) <= button_debounced(2);     -- right
+			--in1_reg(3) <= button_debounced(2);     -- right
 
 	
       elsif PACMAN = '1' then
@@ -279,21 +291,25 @@ begin
 		  in1_reg(5) <= not button_debounced(7);     -- P1 start "F2"
 		  -- in1_reg(6) <= not button_debounced(7);     -- P2 start "F4"
 
-        --	p1_jump  <= ps2_scancode(8);       -- P1 jump "I"
-        --	p2_jump  <= ps2_scancode(8);       -- P2 jump "I"
-
+        
 		  in0_reg(0) <= button_debounced(0);     -- up 
-		  in1_reg(0) <= button_debounced(0);     -- up 
+		  --in1_reg(0) <= button_debounced(9);     -- up 
 
 		  in0_reg(3) <= button_debounced(1);     -- down
-		  in1_reg(3) <= button_debounced(1);     -- down
+		  --in1_reg(3) <= button_debounced(10);     -- down
 
 		  in0_reg(1) <=  button_debounced(3);     -- left
-		  in1_reg(1) <=  button_debounced(3);     -- left
+		  --in1_reg(1) <=  button_debounced(12);     --left
 
-		  in0_reg(2) <= button_debounced(2);     -- P1 right
-		  in1_reg(2) <= button_debounced(2);     -- P2 right
+		  in0_reg(2) <= button_debounced(2);     -- right
+		  --in1_reg(2) <= button_debounced(11);     -- right
+		  
+		  if PACMANICMINERMAN = '1' then
+			in1_reg(2) <= button_debounced(4); -- use fire for jump
+		     
+		  end if;
 	
+		 end if;
 		 end if;
 		end if;
 	end process;

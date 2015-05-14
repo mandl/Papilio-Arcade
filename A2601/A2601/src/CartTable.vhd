@@ -4,15 +4,18 @@ use ieee.numeric_std.all;
 
 entity CartTable is
    port(clk: in std_logic;
-        d: out std_logic_vector(10 downto 0);
-        c: out std_logic_vector(6 downto 0);
-        a: in std_logic_vector(6 downto 0));
+        d: out std_logic_vector(10 downto 0);  -- rom config
+        c: out std_logic_vector(6 downto 0);   -- card max
+        a: in std_logic_vector(6 downto 0));   -- card control
 end CartTable;
+
+-- Bank switching(3 downto 1);
+-- Superchip(0);
 
 architecture arch of CartTable is
    type rom_type is array (0 to 127) of std_logic_vector(10 downto 0);
    signal rom: rom_type := (
-        "00000000000",
+      "00000000000",
       "00000010000",
       "00000100010",
       "00001000010",

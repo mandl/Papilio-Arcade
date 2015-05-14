@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Converts binary rom files to VHDL files
 # Copyright 2006, 2010 Retromaster
 #

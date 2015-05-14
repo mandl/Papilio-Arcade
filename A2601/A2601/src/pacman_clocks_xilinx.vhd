@@ -75,50 +75,14 @@ architecture RTL of PACMAN_CLOCKS is
   signal delay_count            : std_logic_vector(7 downto 0) := (others => '0');
   signal div_cnt                : std_logic_vector(1 downto 0);
 
---  attribute DLL_FREQUENCY_MODE    : string;
---  attribute DUTY_CYCLE_CORRECTION : string;
---  attribute CLKOUT_PHASE_SHIFT    : string;
---  attribute PHASE_SHIFT           : integer;
---  attribute CLKFX_MULTIPLY        : integer;
---  attribute CLKFX_DIVIDE          : integer;
---  attribute CLKDV_DIVIDE          : real;
---  attribute STARTUP_WAIT          : string;
---  attribute CLKIN_PERIOD          : real;
 
-  -- The original uses a 6.144 MHz clock
-  --
-  -- Here we are taking in 32MHz clock, and using the CLKFX 32*(10/13) to get 24.615MHz
-  -- We are then clock enabling the whole design at /4 and /2
-  --
-  -- This runs the game at 6.15 MHz which is 0.16% fast.
-  --
-  -- (The scan doubler requires a x2 freq clock)
---  function str2bool (str : string) return boolean is
---  begin
---    if (str = "TRUE") or (str = "true") then
---      return TRUE;
---    else
---      return FALSE;
---    end if;
---  end str2bool;
 
 begin
 
   reset_dcm_h <= not I_RESET_L;
   IBUFG0 : IBUFG port map (I=> I_CLK_REF, O => clk_ref_ibuf);
 
---  dcma   : if true generate
---    attribute DLL_FREQUENCY_MODE    of dcm_inst : label is "LOW";
---    attribute DUTY_CYCLE_CORRECTION of dcm_inst : label is "TRUE";
---    attribute CLKOUT_PHASE_SHIFT    of dcm_inst : label is "NONE";
---    attribute PHASE_SHIFT           of dcm_inst : label is 0;
---    attribute CLKFX_MULTIPLY        of dcm_inst : label is 10;
---    attribute CLKFX_DIVIDE          of dcm_inst : label is 13;
---    attribute CLKDV_DIVIDE          of dcm_inst : label is 2.0;
---    attribute STARTUP_WAIT          of dcm_inst : label is "FALSE";
---    attribute CLKIN_PERIOD          of dcm_inst : label is 31.25;
---    --
---    begin
+
     dcm_inst : DCM_SP
       generic map (
         DLL_FREQUENCY_MODE    => "LOW",
