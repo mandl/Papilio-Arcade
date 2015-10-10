@@ -7,8 +7,10 @@
 using namespace std;
 
 #define VER_MAJ 3
-#define VER_MIN 3
+#define VER_MIN 4
 #define MAX_ROM_SIZE 0x4000
+
+//#define NO_ROM_DATA
 
 int main(int argc, char* argv[])
 
@@ -39,7 +41,7 @@ int main(int argc, char* argv[])
 		cerr << "\n";
 		cerr << "for the enable paramater (optional) use :\n";
 		cerr << "  e  - clock enable generated \n";
-		cerr << "\n";
+      	cerr << "\n";
 		cerr << "note: generated roms are always 8 bits wide\n";
 		cerr << "      max 12 address bits for block ram4s\n";
 		cerr << "      max 14 address bits for block ram16s\n";
@@ -56,9 +58,12 @@ int main(int argc, char* argv[])
 	char rom_type = 0;
 	char option_1 = 0;
 	char option_2 = 0;
+   
+ 
 	sscanf(argv[4],"%c",&rom_type);
 	if (argc > 5) sscanf(argv[5],"%c",&option_1);
 	if (argc > 6) sscanf(argv[6],"%c",&option_2);
+       
 
 	bool format_case = false;
 	bool format_array = false;
@@ -93,6 +98,7 @@ int main(int argc, char* argv[])
 			return -1;
 		}
 	}
+        
 
 	if ((rom_type == 'c') || (rom_type == 'C')) {
 		cerr << "INFO : rtl model, case statement \n"; format_case = true; }
@@ -192,6 +198,8 @@ int main(int argc, char* argv[])
 	// clear mem
 	for (i = 0; i < MAX_ROM_SIZE; i++) mem[i] = 0;
 
+	
+        
 	// process file
 	data = getc(fin);
 	while (!feof(fin) && (addr < rom_size)) {
@@ -199,9 +207,15 @@ int main(int argc, char* argv[])
 			cerr << "ERROR : file too large\n";
 			return -1;
 		}
+                
+               #ifdef NO_ROM_DATA
+                        mem[addr] = 0;
+               #else
+                        mem[addr] = data;
+               #endif
 
-		mem[addr] = data;
-		// debug
+
+                // debug
 		//if (addr % 16 == 0) printf("%04x : ",addr);
 		//printf("%02x  ",data);
 		//if (addr % 16 == 15) printf("\n");
@@ -213,6 +227,7 @@ int main(int argc, char* argv[])
 		addr ++;
 		data = getc(fin);
 	}
+        
 	fclose(fin);
 
 
@@ -294,6 +309,10 @@ int main(int argc, char* argv[])
 		return 0;
 	} // end case
 	printf("-- generated with romgen v%d.%02d by MikeJ\n", VER_MAJ, VER_MIN);
+    #ifdef NO_ROM_DATA
+    
+        	printf("-- dummy rom. no rom data;\n");
+	#endif
 	printf("library ieee;\n");
 	printf("\tuse ieee.std_logic_1164.all;\n");
 	printf("\tuse ieee.std_logic_unsigned.all;\n");

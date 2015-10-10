@@ -1,0 +1,109 @@
+
+
+ADDRESS_MAP avrmap PPC405 0
+
+  	  
+    ADDRESS_SPACE rom_sprite_l RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	        inst_rom_spritel/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	        inst_rom_spritel/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;	
+
+    ADDRESS_SPACE rom_sprite_u RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	        inst_rom_spriteu/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	        inst_rom_spriteu/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;	
+
+    ADDRESS_SPACE rom_char_l RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	       inst_rom_charl/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	       inst_rom_charl/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE rom_char_u RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	      inst_rom_charu/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	      inst_rom_charu/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE INST_ROM_CPU1 RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu1/rom0.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu1/rom1.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu1/rom2.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu1/rom3.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE INST_ROM_CPU2 RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu2/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu2/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu2/rom2.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu2/rom3.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE INST_ROM_CPU3 RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu3/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu3/rom2.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu3/rom3.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+
+END_ADDRESS_MAP;
