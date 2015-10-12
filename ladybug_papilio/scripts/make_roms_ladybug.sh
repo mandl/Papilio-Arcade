@@ -38,6 +38,9 @@ cp ../roms/dummy_prom_decrypt.vhd $rom_path/prom_decrypt.vhd
 $romgen_path/romgen $rom_path_src/10-1.f4     prom_10_1     5 a r > $rom_path/prom_10_1.vhd
 $romgen_path/romgen $rom_path_src/10-2.k1     prom_10_2     5 a r > $rom_path/prom_10_2.vhd
 $romgen_path/romgen $rom_path_src/10-3.c4     prom_10_3     5 a r > $rom_path/prom_10_3.vhd
+#$romgen_path/romgen $rom_path_src/10-1.f4     prom_10_1     5 b r > $rom_path/prom_10_1.vhd
+#$romgen_path/romgen $rom_path_src/10-2.k1     prom_10_2     5 b r > $rom_path/prom_10_2.vhd
+#$romgen_path/romgen $rom_path_src/10-3.c4     prom_10_3     5 b r > $rom_path/prom_10_3.vhd
 $romgen_path/romgen $rom_path/cpu1.bin        rom_cpu1     13 l r > $rom_path/cpu1.vhd
 $romgen_path/romgen $rom_path/cpu2.bin        rom_cpu2     13 l r > $rom_path/cpu2.vhd
 $romgen_path/romgen $rom_path/cpu3.bin        rom_cpu3     13 l r > $rom_path/cpu3.vhd

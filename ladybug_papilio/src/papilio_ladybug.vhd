@@ -267,18 +267,18 @@ begin
 ------------------------------------------------------------
 -- Key debounce
 ------------------------------------------------------------	
-  button_in(8 downto 0) <= I_SW(8 downto 0);
+  button_debounced(8 downto 0) <= I_SW(8 downto 0);
   JOYSTICK_GND <= '0';
   
-  u_debounce : entity work.BUTTON_DEBOUNCE
-  generic map (
-    G_WIDTH => 9
-    )
-  port map (
-    I_BUTTON => button_in,
-    O_BUTTON => button_debounced,
-    CLK      => clk_20mhz_s
-    );
+--  u_debounce : entity work.BUTTON_DEBOUNCE
+--  generic map (
+--    G_WIDTH => 9
+--    )
+--  port map (
+--    I_BUTTON => button_in,
+--    O_BUTTON => button_debounced,
+--    CLK      => clk_20mhz_s
+--    );
 
   p_input_registers : process
 	begin
@@ -306,61 +306,7 @@ begin
 			Buttons(5) <= button_debounced(5); --2Player start
 		end if;
 	end process;
-	-----------------------------------------------------------------------------
-	-- Keypad - active low buttons
-	-----------------------------------------------------------------------------
---	key : entity work.Keyboard
---	port map (
---		Reset     => I_RESET,
---		Clock     => clk_20mhz_s,
---		PS2Clock  => PS2CLK1,
---		PS2Data   => PS2DAT1,
---		CodeReady => ps2_codeready,  --: out STD_LOGIC;
---		ScanCode  => ps2_scancode    --: out STD_LOGIC_VECTOR(9 downto 0)
---	);
 
--- ScanCode(9)          : 1 = Extended  0 = Regular
--- ScanCode(8)          : 1 = Break     0 = Make
--- ScanCode(7 downto 0) : Key Code
---	process(clk_20mhz_s)
---	begin
---		if rising_edge(clk_20mhz_s) then
---			if ext_res_s = '1' then
---				but_chute_s  <= (others=>'0');
---				but_fire_s   <= (others=>'1');
---				but_bomb_s   <= (others=>'1');
---				but_tilt_s   <= (others=>'1');
---				but_select_s <= (others=>'1');
---				but_up_s     <= (others=>'1');
---				but_down_s   <= (others=>'1');
---				but_left_s   <= (others=>'1');
---				but_right_s  <= (others=>'1');
---			elsif (ps2_codeready = '1') then
---				case (ps2_scancode(7 downto 0)) is
---					when x"05" => but_chute_s(0)  <= not ps2_scancode(8); -- active high coin1 "F1"
---					when x"06" => but_select_s(0) <= ps2_scancode(8);     -- active low P1 select "F2"
---					when x"43" => but_bomb_s(0)   <= ps2_scancode(8);     -- active low P1 bomb "I"
---					when x"44" => but_fire_s(0)   <= ps2_scancode(8);     -- active low P1 fire "O"
---					when x"4d" => but_tilt_s(0)   <= ps2_scancode(8);     -- active low P1 tilt "P"
---					when x"75" => but_up_s(0)     <= ps2_scancode(8);     -- active low P1 up arrow
---					when x"72" => but_down_s(0)   <= ps2_scancode(8);     -- active low P1 down arrow
---					when x"6b" => but_left_s(0)   <= ps2_scancode(8);     -- active low P1 left arrow
---					when x"74" => but_right_s(0)  <= ps2_scancode(8);     -- active low P1 right arrow
---
---					when x"04" => but_chute_s(1)  <= not ps2_scancode(8); -- active high coin2 "F3"
---					when x"0c" => but_select_s(1) <= ps2_scancode(8);     -- active low P2 select "F4"
---					when x"32" => but_bomb_s(1)   <= ps2_scancode(8);     -- active low P2 bomb "B"
---					when x"31" => but_fire_s(1)   <= ps2_scancode(8);     -- active low P2 fire "N"
---					when x"3a" => but_tilt_s(1)   <= ps2_scancode(8);     -- active low P2 tilt "M"
---					when x"1b" => but_up_s(1)     <= ps2_scancode(8);     -- active low P2 up "S"
---					when x"22" => but_down_s(1)   <= ps2_scancode(8);     -- active low P2 down "X"
---					when x"1a" => but_left_s(1)   <= ps2_scancode(8);     -- active low P2 left "Z"
---					when x"21" => but_right_s(1)  <= ps2_scancode(8);     -- active low P2 right "C"
---					when others => null;
---				end case;
---			end if;
---		end if;
---	end process;
 
 	-----------------------------------------------------------------------------
 	-- Building the DIP Switches - see file ladybug_dip_pack.vhd
