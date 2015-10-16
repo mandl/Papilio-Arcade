@@ -141,10 +141,10 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	// ram b16s
-	// for  14 bits use ram_b16_s1 x data_width
-	// for  13 bits use ram_b16_s2 x data_width/2
-	// for  12 bits use ram_b16_s4 x data_width/4
-	// for<=11 bits use ram_b16_s8 x data_width/8
+	// for  14 bits use ram_b16_s1 x data_width       16 k
+	// for  13 bits use ram_b16_s2 x data_width/2      8 k
+	// for  12 bits use ram_b16_s4 x data_width/4      4 k 
+	// for<=11 bits use ram_b16_s8 x data_width/8      2 k
 
 	// ram b4s
 	// for  12 bits use ram_b4_s1 x data_width
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
 			case 14 : number_of_block_rams = 8; block_ram_width = 1; block_ram_pwidth = 0; block_ram_abits = 14; break;
 			case 13 : number_of_block_rams = 4; block_ram_width = 2; block_ram_pwidth = 0; block_ram_abits = 13; break;
 			case 12 : number_of_block_rams = 2; block_ram_width = 4; block_ram_pwidth = 0; block_ram_abits = 12; break;
-			default : ;
+                        default : ;
 		}
 	}
 	else {
@@ -495,17 +495,19 @@ int main(int argc, char* argv[])
 	//{{{
 	if (format_array == true) {
 		if (format_clock == true)
-			printf("\tp_rom : process\n");
+			printf("\tp_rom : process(CLK,ADDR)\n");
 		else
 			printf("\tp_rom : process(ADDR)\n");
 		printf("\tbegin\n");
 		if (format_clock == true)
-			printf("\t\twait until rising_edge(CLK);\n");
+			printf("\t\tif (rising_edge(CLK)) then\n");
 		if (format_ena == true)
 			printf("\t\tif (ENA = '1') then\n  ");
 		printf("\t\t\tDATA <= ROM(to_integer(unsigned(ADDR)));\n");
 		if (format_ena == true)
 			printf("\t\tend if;\n");
+                if (format_clock == true)
+			printf("\t\t end if;\n");
 		printf("\tend process;\n");
 	//}}}
 	} // end array

@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------
 -- Bagman - Dar - Feb 2014
 -- See README for explanation about sram loading or vhdl rom files.
+-- port to papilio
+--
 ---------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all,ieee.numeric_std.all;

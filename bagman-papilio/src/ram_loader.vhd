@@ -46,9 +46,10 @@ architecture struct of ram_loader is
 
 signal wr_addr      : std_logic_vector(16 downto 0) := (others => '0');
 signal rd_addr      : std_logic_vector(14 downto 0) := (others => '0');
-signal step_cnt     : integer range 0 to 7 := 0;
+signal step_cnt     : integer range 0 to 8 := 0;
 signal next_word    : std_logic := '0';
 signal do_prog      : std_logic_vector(7 downto 0);
+signal do_prog_2      : std_logic_vector(7 downto 0);
 signal do_tile_bit0 : std_logic_vector(7 downto 0);
 signal do_tile_bit1 : std_logic_vector(7 downto 0);
 
@@ -56,9 +57,16 @@ begin
 
 program : entity work.bagman_program
 port map(
-	addr => rd_addr(14 downto 0),
+	addr => rd_addr(13 downto 0),
 	clk  => clock,
 	data => do_prog 
+);
+
+program2 : entity work.bagman_program2
+port map(
+	addr => rd_addr(12 downto 0),
+	clk  => clock,
+	data => do_prog_2 
 );
 
 tile_bit0 : entity work.bagman_tile_bit0
@@ -83,14 +91,16 @@ with step_cnt select
 				next_word when 3,
 				next_word when 4,
 				next_word when 5,
+				next_word when 6,
 				'0' when others;
 
 with step_cnt select
-	data <=	do_prog when 1,
-					do_tile_bit0 when 2,
-					do_tile_bit1 when 3,
-					rd_addr(7 downto 0) when 4,
-					"01" & rd_addr(9 downto 8) &"0001" when 5,
+	data <=	   do_prog when 1,
+	            do_prog_2 when 2,
+					do_tile_bit0 when 3,
+					do_tile_bit1 when 4,
+					rd_addr(7 downto 0) when 5,
+					"01" & rd_addr(9 downto 8) &"0001" when 6,
 					"00000000" when others;
 
 process(clock,reset)
@@ -117,36 +127,43 @@ begin
 							step_cnt <= step_cnt + 1;
 						end if;
 					elsif step_cnt = 1 then              -- step 1
-						if rd_addr = X"5FFF" then          -- program length
-							wr_addr <= "1" & X"0000";        -- tile 0 start
+						if rd_addr = X"4000" then          -- program length 16k
+							wr_addr <= "0" & X"4000";        -- tile 0 start
 							rd_addr <= (others => '0');
 							step_cnt <= step_cnt + 1;
 						end if;
 					elsif step_cnt = 2 then              -- step 2
-						if rd_addr = X"1FFF" then          -- tile 0 length
+						if rd_addr = X"2000" then          -- program length 8k
+							wr_addr <= "1" & X"0000";        -- tile 0 start
+							rd_addr <= (others => '0');
+							step_cnt <= step_cnt + 1;
+						end if;
+						
+					elsif step_cnt = 3 then              -- step 3
+						if rd_addr = X"2000" then          -- tile 0 length
 							wr_addr <= "1" & X"2000";        -- tile 1 start
 							rd_addr <= (others => '0');
 							step_cnt <= step_cnt + 1;
 						end if;
-					elsif step_cnt = 3 then              -- step 3
-						if rd_addr = X"1FFF" then          -- tile 1 length
+					elsif step_cnt = 4 then              -- step 4
+						if rd_addr = X"2000" then          -- tile 1 length
 							wr_addr <= "0" & X"9040";        -- ram tile start
 							rd_addr <= (others => '0');
 							step_cnt <= step_cnt + 1;
 						end if;
-					elsif step_cnt = 4 then              -- step 4
-						if rd_addr = X"03FF" then          -- ram tile length
+					elsif step_cnt = 5 then              -- step 5
+						if rd_addr = X"0400" then          -- ram tile length
 							wr_addr <= "0" & X"9800";        -- ram color start
 							rd_addr <= (others => '0');
 							step_cnt <= step_cnt + 1;
 						end if;
-					elsif step_cnt = 5 then              -- step 5
-						if rd_addr = X"03FF" then          -- ram color length
+					elsif step_cnt = 6 then              -- step 6
+						if rd_addr = X"0400" then          -- ram color length
 							wr_addr <= "1" & X"FFFF";        -- stop address
 							rd_addr <= (others => '0');
 							step_cnt <= step_cnt + 1;
 						end if;
-					elsif step_cnt < 7 then              -- other steps
+					elsif step_cnt < 8 then              -- other steps
 					step_cnt <= step_cnt + 1;
 					else
 						loading<= '0';
