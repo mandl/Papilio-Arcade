@@ -15,9 +15,7 @@ port(
   O_AUDIO_L : out std_logic;
   O_AUDIO_R : out std_logic;
   
-  --ps2_clk      : in std_logic;
-  --ps2_dat      : in std_logic;
-  
+   
   -- SRAM
  sram_addr		: out		std_logic_vector(20 downto 0);	-- SRAM address bus
  sram_data		: inout	std_logic_vector(7 downto 0);	-- SRAM data bus
@@ -50,16 +48,11 @@ architecture struct of bagman is
 -- clocks
 signal clock_12mhz  : std_logic := '0';
 signal clock_1mhz   : std_logic := '0';
-signal div3_clk     : unsigned(1 downto 0) := "00";
-signal div35_clk    : unsigned(5 downto 0) := "000000";
 
 signal sound_string : std_logic_vector(12 downto 0);
---signal sram_addr    : std_logic_vector(16 downto 0);
-signal sram_we      : std_logic;
---signal sram_data    : std_logic_vector(7 downto 0);
-signal tv15Khz_mode : std_logic := '0';
 
-signal video_clk    : std_logic;
+signal sram_we      : std_logic;
+
 signal video_r      : std_logic_vector(2 downto 0);
 signal video_g      : std_logic_vector(2 downto 0);
 signal video_b      : std_logic_vector(1 downto 0);
@@ -174,6 +167,8 @@ port map
     -- Status and control signals
     RESET  => RESET2,
     LOCKED => LOCKED);
+	 
+----------------------------------------------------
 
 m_dac : entity work.dac
 generic map(msbi_g  => 12)
@@ -186,10 +181,9 @@ port map(
 -- video output
 ------------------
 video_i     <= do_palette when blank = '0' else (others => '0');
-video_r     <= video_o(2 downto 0) when tv15Khz_mode = '0' else video_i(2 downto 0);
-video_g     <= video_o(5 downto 3) when tv15Khz_mode = '0' else video_i(5 downto 3);
-video_b     <= video_o(7 downto 6) when tv15Khz_mode = '0' else video_i(7 downto 6);
-video_clk   <= clock_12mhz;
+video_r     <= video_o(2 downto 0);
+video_g     <= video_o(5 downto 3);
+video_b     <= video_o(7 downto 6);
 
 video_hs    <= hsync_o;
 video_vs    <= vsync_o;
@@ -513,6 +507,8 @@ port map (
 	data => do_palette 
 );
 
+---------------------------------------------------------------------
+
 Z80 : entity work.T80s
 generic map(Mode => 0, T2Write => 1, IOWait => 1)
 port map(
@@ -534,6 +530,7 @@ port map(
 	DI      => cpu_di,
 	DO      => cpu_data
 );
+---------------------------------------------------------------------
 
 ym2149 : entity work.ym2149
 port map (
@@ -563,22 +560,7 @@ port map (
 	CLK         => x_pixel(1) -- note 6 Mhz!
 );
 
---kdb : entity work.io_ps2_keyboard
---port map (
---	clk       => clock_12mhz,
---	kbd_clk   => ps2_clk,
---	kbd_dat   => ps2_dat,
---	interrupt => kbd_int,
---	scanCode  => kbd_scan_code
---);
---
---joystick : entity work.kbd_joystick
---port map (
---	clk           => clock_12mhz,
---	kbd_int       => kbd_int,
---	kbd_scan_code => std_logic_vector(kbd_scan_code), 
---	joy_pcfrldu   => joy_pcfrldu
---);
+----------------------------------------------------------
 
 bagman_speech : entity work.bagman_speech
 port map(
@@ -590,6 +572,8 @@ port map(
 	SpeechSample => speech_sample
 ); 
 
+---------------------------------------------------------
+
 pal16r6 : entity work.bagman_pal16r6
 port map(
 	clk  => vsync,
@@ -597,8 +581,7 @@ port map(
 	data => pal16r6_data
 );
 
--------------------------------------------
--- Uncomment only one of the two part below
+
 ------------------------------------------- use internal sram loader
 ram_loader : entity work.ram_loader
 port map(
@@ -609,12 +592,6 @@ reset    => reset,
 	we       => load_we,
 	loading  => loading
 );
-------------------------------------------- use external sram loader
---	load_addr <= '0'& X"0000";
---	load_data <= X"00";
---	load_we   <= '0';
---	loading   <= not reset;
-------------------------------------------
 
 
 end architecture;

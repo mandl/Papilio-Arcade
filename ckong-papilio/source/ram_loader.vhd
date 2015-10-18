@@ -116,7 +116,7 @@ begin
 						if rd_addr = X"3" then
 							wr_addr <= (others => '0');
 							loading <= '1';
-						elsif rd_addr = X"7" then
+						elsif rd_addr = X"FF" then
 							wr_addr <= "0" & X"0000";  -- program start address
 							rd_addr <= (others => '0');
 							step_cnt <= step_cnt + 1;

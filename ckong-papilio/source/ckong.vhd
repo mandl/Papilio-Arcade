@@ -58,8 +58,8 @@ signal video_g      : std_logic_vector(2 downto 0);
 signal video_b      : std_logic_vector(1 downto 0);
 
 
-signal tv15Khz_mode : std_logic;
-signal sound_string : std_logic_vector(15 downto 0);
+
+signal sound_string : std_logic_vector(12 downto 0);
 signal dac_o        : std_logic := '0';
 
 signal reset        : std_logic;
@@ -188,9 +188,9 @@ video_mux <= do_palette when is_big_sprite_on = '0' else do_big_sprite_palette;
 
 video_i   <= video_mux when blank = '0' else (others => '0');
 
-video_r     <= video_o(2 downto 0) when tv15Khz_mode = '0' else video_i(2 downto 0);
-video_g     <= video_o(5 downto 3) when tv15Khz_mode = '0' else video_i(5 downto 3);
-video_b     <= video_o(7 downto 6) when tv15Khz_mode = '0' else video_i(7 downto 6);
+video_r     <= video_o(2 downto 0);
+video_g     <= video_o(5 downto 3);
+video_b     <= video_o(7 downto 6);
 
 video_hs    <= hsync_o;
 video_vs    <= vsync_o;
@@ -623,13 +623,13 @@ end process;
 
 -------------------------------------------------
 
-m_dac : entity work.dac
-generic map(msbi_g  => 15)
-port map(
-		clk_i => CLK_48mhz,
-		res_n_i => reset,
-		dac_i   => sound_string,
-		dac_o   => dac_o);
+--m_dac : entity work.dac
+--generic map(msbi_g  => 12)
+--port map(
+--		clk_i => CLK_48mhz,
+--		res_n_i => '1',
+--		dac_i   => sound_string,
+--		dac_o   => dac_o);
 -------------------------------------------------
 		
 m_clock : entity work.clock
@@ -722,25 +722,8 @@ port map(
   sound_sample => sound_string
 );
 
---kdb : entity work.io_ps2_keyboard
---port map (
---  clk       => CLK_48mhz,
---  kbd_clk   => ps2_clk,
---  kbd_dat   => ps2_dat,
---  interrupt => kbd_int,
---  scanCode  => kbd_scan_code
---);
---
---joystick : entity work.kbd_joystick
---port map (
---	clk           => CLK_48mhz,
---	kbd_int       => kbd_int,
---	kbd_scan_code => std_logic_vector(kbd_scan_code), 
---	joy_pcfrldu   => joy_pcfrldu 
---);
 
--------------------------------------------
--- Uncomment only one of the two part below
+
 ------------------------------------------- use internal sram loader
 ram_loader : entity work.ram_loader
 port map(
@@ -751,10 +734,5 @@ port map(
 	we       => load_we,
 	loading  => loading
 );
-------------------------------------------- use external sram loader
---load_addr <= '0'& X"0000";
---load_data <= X"00";
---load_we   <= '0';
---loading   <= not reset;
-------------------------------------------
+
 end architecture;

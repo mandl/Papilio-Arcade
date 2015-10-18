@@ -37,6 +37,6 @@ $romgen_path/romgen $rom_path/prog2.bin bagman_program2 13 l r  > $rom_path/bagm
 
 $romgen_path/romgen $rom_path/bagman_tile0.bin bagman_tile_bit0 13 l r > $rom_path/bagman_tile_bit0.vhd 
 $romgen_path/romgen $rom_path/bagman_tile1.bin bagman_tile_bit1 13 l r > $rom_path/bagman_tile_bit1.vhd 
-$romgen_path/romgen $rom_path/bagman_palette.bin bagman_palette 6 a r > $rom_path/bagman_palette.vhd 
+$romgen_path/romgen $rom_path/bagman_palette.bin bagman_palette 6 l r > $rom_path/bagman_palette.vhd 
 $romgen_path/romgen $rom_path_src/r9_b11.bin bagman_speech1 12 l r  > $rom_path/bagman_speech1.vhd 
 $romgen_path/romgen $rom_path_src/t9_b12.bin bagman_speech2 12 l r > $rom_path/bagman_speech2.vhd 
