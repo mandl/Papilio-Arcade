@@ -4,6 +4,8 @@
 #include <math.h>
 #include <iostream>
 #include <iomanip>
+#include <sys/time.h>
+
 using namespace std;
 
 #define VER_MAJ 3
@@ -49,6 +51,8 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+        
+
 	fin = fopen(argv[1],"rb");
 	if (fin == NULL) {
 		cerr << "ERROR : Could not open input file " << argv[1] <<"\n";
@@ -59,7 +63,8 @@ int main(int argc, char* argv[])
 	char option_1 = 0;
 	char option_2 = 0;
    
- 
+        //srand((unsigned int)time(NULL) +1);
+
 	sscanf(argv[4],"%c",&rom_type);
 	if (argc > 5) sscanf(argv[5],"%c",&option_1);
 	if (argc > 6) sscanf(argv[6],"%c",&option_2);
@@ -202,6 +207,10 @@ int main(int argc, char* argv[])
         
 	// process file
 	data = getc(fin);
+        struct timeval tvBegin;
+        gettimeofday(&tvBegin, NULL);
+
+        srand((unsigned int)tvBegin.tv_usec);
 	while (!feof(fin) && (addr < rom_size)) {
 		if (addr >= MAX_ROM_SIZE) {
 			cerr << "ERROR : file too large\n";
@@ -209,7 +218,10 @@ int main(int argc, char* argv[])
 		}
                 
                #ifdef NO_ROM_DATA
-                        mem[addr] = 0;
+                        
+
+                        int data_rnd = rand() % 0xFF;
+                        mem[addr] = 00; //data_rnd;
                #else
                         mem[addr] = data;
                #endif
@@ -311,15 +323,14 @@ int main(int argc, char* argv[])
 	printf("-- generated with romgen v%d.%02d by MikeJ\n", VER_MAJ, VER_MIN);
     #ifdef NO_ROM_DATA
     
-        	printf("-- dummy rom. no rom data;\n");
+        	printf("-- dummy rom. random rom data. avoid map to optimise this rom away;\n");
 	#endif
 	printf("library ieee;\n");
 	printf("\tuse ieee.std_logic_1164.all;\n");
-	printf("\tuse ieee.std_logic_unsigned.all;\n");
 	printf("\tuse ieee.numeric_std.all;\n");
 	printf("\n");
-	printf("library UNISIM;\n");
-	printf("\tuse UNISIM.Vcomponents.all;\n");
+	printf("--library UNISIM;\n");
+	printf("\t--use UNISIM.Vcomponents.all;\n");
 	printf("\n");
 	printf("entity %s is\n",argv[2]);
 	printf("port (\n");
@@ -345,7 +356,7 @@ int main(int argc, char* argv[])
 	if (format_array == true) {
 		printf("\n");
 		printf("\ttype ROM_ARRAY is array(0 to %d) of std_logic_vector(7 downto 0);\n",rom_size - 1);
-		printf("\tconstant ROM : ROM_ARRAY := (\n");
+		printf("\tsignal ROM : ROM_ARRAY := (\n");
 		for (i = 0; i < rom_size; i ++ ) {
 			if (i % 8 == 0) printf("\t\t");
 			printf("x\042%02X\042",mem[i]);
@@ -354,6 +365,10 @@ int main(int argc, char* argv[])
 			if (i % 8 == 7) printf(" -- 0x%04X\n",i - 7);
 		}
 		printf("\t);\n");
+                printf("\tattribute ram_style : string;\n");
+                printf("\tattribute ram_style of ROM : signal is \"block\";\n");
+                
+
 		printf("\n");
 	} // end array
 	//}}}
