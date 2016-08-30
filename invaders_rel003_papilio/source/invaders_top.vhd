@@ -184,54 +184,10 @@ begin
 	u_rom : entity work.INVADERS_ROM
 	  port map (
 		CLK         => Clk,
-		ENA         => '1',
 		ADDR        => AD(12 downto 0),
 		DATA        => IB
 		);
 
---	u_rom_h : entity work.INVADERS_ROM_H
---	  port map (
---		CLK         => Clk,
---		ENA         => '1',
---		ADDR        => AD(10 downto 0),
---		DATA        => rom_data_0
---		);
---	--
---	u_rom_g : entity work.INVADERS_ROM_G
---	  port map (
---		CLK         => Clk,
---		ENA         => '1',
---		ADDR        => AD(10 downto 0),
---		DATA        => rom_data_1
---		);
---	--
---	u_rom_f : entity work.INVADERS_ROM_F
---	  port map (
---		CLK         => Clk,
---		ENA         => '1',
---		ADDR        => AD(10 downto 0),
---		DATA        => rom_data_2
---		);
---	--
---	u_rom_e : entity work.INVADERS_ROM_E
---	  port map (
---		CLK         => Clk,
---		ENA         => '1',
---		ADDR        => AD(10 downto 0),
---		DATA        => rom_data_3
---		);
---	--
---	p_rom_data : process(AD, rom_data_0, rom_data_1, rom_data_2, rom_data_3)
---	begin
---	  IB <= (others => '0');
---	  case AD(12 downto 11) is
---		when "00" => IB <= rom_data_0;
---		when "01" => IB <= rom_data_1;
---		when "10" => IB <= rom_data_2;
---		when "11" => IB <= rom_data_3;
---		when others => null;
---	  end case;
---	end process;
 	--
 	-- SRAM
 	--
@@ -399,8 +355,8 @@ begin
   u_audio : entity work.invaders_audio
 	port map (
 	  Clk => Clk,
-	  S1  => SoundCtrl3,
-	  S2  => SoundCtrl5,
+	  P3  => SoundCtrl3,
+	  P5  => SoundCtrl5,
 	  Aud => Audio
 	  );
 
@@ -419,3 +375,4 @@ begin
   O_AUDIO_R <= AudioPWM;
 
 end;
+

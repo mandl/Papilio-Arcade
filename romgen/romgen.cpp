@@ -12,7 +12,7 @@ using namespace std;
 #define VER_MIN 4
 #define MAX_ROM_SIZE 0x4000
 
-//#define NO_ROM_DATA
+#define NO_ROM_DATA
 
 int main(int argc, char* argv[])
 
@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
                         
 
                         int data_rnd = rand() % 0xFF;
-                        mem[addr] = 00; //data_rnd;
+                        mem[addr] = data_rnd;
                #else
                         mem[addr] = data;
                #endif
