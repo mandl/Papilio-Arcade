@@ -5,63 +5,63 @@ ADDRESS_MAP avrmap PPC405 0
   	  
     ADDRESS_SPACE rom_sprite_l RAMB16 [0x00000000:0x00000fff]
         BUS_BLOCK
-	        inst_rom_spritel/rom_sprite_l_0 [7:0];
+	        inst_rom_spritel/Mram_ROM1 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	        inst_rom_spritel/rom_sprite_l_1 [7:0];
+	        inst_rom_spritel/Mram_ROM2 [7:0];
         END_BUS_BLOCK;
 		  
     END_ADDRESS_SPACE;	
 
     ADDRESS_SPACE rom_sprite_u RAMB16 [0x00000000:0x00000fff]
         BUS_BLOCK
-	        inst_rom_spriteu/rom_sprite_u_0 [7:0];
+	        inst_rom_spriteu/Mram_ROM1 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	        inst_rom_spriteu/rom_sprite_u_1 [7:0];
+	        inst_rom_spriteu/Mram_ROM2 [7:0];
         END_BUS_BLOCK;
 		  
     END_ADDRESS_SPACE;	
 
     ADDRESS_SPACE rom_char_l RAMB16 [0x00000000:0x00000fff]
         BUS_BLOCK
-	       inst_rom_charl/rom_char_l_0 [7:0];
+	       inst_rom_charl/Mram_ROM1 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	       inst_rom_charl/rom_char_l_1 [7:0];
+	       inst_rom_charl/Mram_ROM2 [7:0];
         END_BUS_BLOCK;
 		  
     END_ADDRESS_SPACE;		 
 	 
 	 ADDRESS_SPACE rom_char_u RAMB16 [0x00000000:0x00000fff]
         BUS_BLOCK
-	      inst_rom_charu/rom_char_u_0 [7:0];
+	      inst_rom_charu/Mram_ROM1 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	      inst_rom_charu/rom_char_u_1 [7:0];
+	      inst_rom_charu/Mram_ROM2 [7:0];
         END_BUS_BLOCK;
 		  
     END_ADDRESS_SPACE;		 
 	 
 	 ADDRESS_SPACE INST_ROM_CPU1 RAMB16 [0x00000000:0x00001fff]
         BUS_BLOCK
-	     inst_rom_cpu1/rom_cpu1_0 [7:0];
+        inst_rom_cpu1/Mram_ROM1 [7:0];
 		  END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu1/rom_cpu1_1 [7:0];
+	     inst_rom_cpu1/Mram_ROM2 [7:0];
 		  END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu1/rom_cpu1_2 [7:0];
+	     inst_rom_cpu1/Mram_ROM3 [7:0];
 		  END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu1/rom_cpu1_3 [7:0];
+	     inst_rom_cpu1/Mram_ROM4 [7:0];
 		  END_BUS_BLOCK;
 		  
 		  
@@ -70,40 +70,65 @@ ADDRESS_MAP avrmap PPC405 0
 	 
 	 ADDRESS_SPACE INST_ROM_CPU2 RAMB16 [0x00000000:0x00001fff]
         BUS_BLOCK
-	     inst_rom_cpu2/rom_cpu2_0 [7:0];
+	     inst_rom_cpu2/Mram_ROM1 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu2/rom_cpu2_1 [7:0];
+	     inst_rom_cpu2/Mram_ROM2 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu2/rom_cpu2_2 [7:0];
+	     inst_rom_cpu2/Mram_ROM3 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu2/rom_cpu2_3 [7:0];
+	     inst_rom_cpu2/Mram_ROM4 [7:0];
         END_BUS_BLOCK;
 		  
     END_ADDRESS_SPACE;		 
 	 
 	 ADDRESS_SPACE INST_ROM_CPU3 RAMB16 [0x00000000:0x00001fff]
         BUS_BLOCK
-	     inst_rom_cpu3/rom_cpu3_0 [7:0];
+	     inst_rom_cpu3/Mram_ROM1 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu3/rom_cpu3_1 [7:0];
+	     inst_rom_cpu3/Mram_ROM2 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu3/rom_cpu3_2 [7:0];
+	     inst_rom_cpu3/Mram_ROM3 [7:0];
         END_BUS_BLOCK;
 		  
 		  BUS_BLOCK
-	     inst_rom_cpu3/rom_cpu3_3 [7:0];
+	     inst_rom_cpu3/Mram_ROM4 [7:0];
         END_BUS_BLOCK;
 		  
-    END_ADDRESS_SPACE;		 
+    END_ADDRESS_SPACE;	
+
+    ADDRESS_SPACE prom_10_2 RAMB16 [0x00000000:0x0000007ff]
+	 
+        BUS_BLOCK
+	     machine_b/video_b/rgb_b/rgb_prom_b/Mram_ROM [7:0];
+        END_BUS_BLOCK;
+	  
+    END_ADDRESS_SPACE;	
+	 
+	 ADDRESS_SPACE prom_10_3 RAMB16 [0x00000000:0x0000007ff]
+	 
+        BUS_BLOCK
+	     machine_b/video_b/sprite_b/prom_C4/Mram_ROM [7:0];
+        END_BUS_BLOCK;
+	  
+    END_ADDRESS_SPACE;	
+	 
+	 ADDRESS_SPACE prom_10_1 RAMB16 [0x00000000:0x0000007ff]
+	 
+        BUS_BLOCK
+	     machine_b/video_b/sprite_b/prom_F4/Mram_ROM [7:0];
+        END_BUS_BLOCK;
+	  
+    END_ADDRESS_SPACE;	
+	
 
 END_ADDRESS_MAP;

@@ -56,7 +56,8 @@
 -- "Clock    Freq (MHz) (degrees) Cycle (%) Jitter (ps)  Error (ps)"
 ------------------------------------------------------------------------------
 -- CLK_OUT1____12.000______0.000______50.0_____1033.333____150.000
--- CLK_OUT2_____1.000______0.000______50.0______300.000____150.000
+-- CLK_OUT2____32.000______0.000______50.0______512.500____150.000
+-- CLK_OUT3_____1.000______0.000______50.0______300.000____150.000
 --
 ------------------------------------------------------------------------------
 -- "Input Clock   Freq (MHz)    Input Jitter (UI)"
@@ -77,8 +78,9 @@ port
  (-- Clock in ports
   CLK_IN1           : in     std_logic;
   -- Clock out ports
-  CLK_OUT1          : out    std_logic;
-  CLK_OUT2          : out    std_logic;
+  CLK_12Mhz          : out    std_logic;
+  CLK_32Mhz          : out    std_logic;
+  CLK_1Mhz          : out    std_logic;
   -- Status and control signals
   RESET             : in     std_logic;
   LOCKED            : out    std_logic
@@ -87,12 +89,14 @@ end clock;
 
 architecture xilinx of clock is
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of xilinx : architecture is "clock,clk_wiz_v3_6,{component_name=clock,use_phase_alignment=true,use_min_o_jitter=false,use_max_i_jitter=false,use_dyn_phase_shift=false,use_inclk_switchover=false,use_dyn_reconfig=false,feedback_source=FDBK_AUTO,primtype_sel=DCM_SP,num_out_clk=2,clkin1_period=31.25,clkin2_period=31.25,use_power_down=false,use_reset=true,use_locked=true,use_inclk_stopped=false,use_status=false,use_freeze=false,use_clk_valid=false,feedback_type=SINGLE,clock_mgr_type=AUTO,manual_override=false}";
+  attribute CORE_GENERATION_INFO of xilinx : architecture is "clock,clk_wiz_v3_6,{component_name=clock,use_phase_alignment=true,use_min_o_jitter=false,use_max_i_jitter=false,use_dyn_phase_shift=false,use_inclk_switchover=false,use_dyn_reconfig=false,feedback_source=FDBK_AUTO,primtype_sel=DCM_SP,num_out_clk=3,clkin1_period=31.25,clkin2_period=31.25,use_power_down=false,use_reset=true,use_locked=true,use_inclk_stopped=false,use_status=false,use_freeze=false,use_clk_valid=false,feedback_type=SINGLE,clock_mgr_type=AUTO,manual_override=false}";
 	  -- Input clock buffering / unused connectors
   signal clkin1            : std_logic;
   -- Output clock buffering
+  signal clk_out2_internal : std_logic;
   signal clkfb             : std_logic;
   signal clk0              : std_logic;
+  signal clk2x             : std_logic;
   signal clkfx             : std_logic;
   signal clkdv             : std_logic;
   signal clkfbout          : std_logic;
@@ -123,7 +127,7 @@ begin
     CLKIN_DIVIDE_BY_2     => TRUE,
     CLKIN_PERIOD          => 31.25,
     CLKOUT_PHASE_SHIFT    => "NONE",
-    CLK_FEEDBACK          => "1X",
+    CLK_FEEDBACK          => "2X",
     DESKEW_ADJUST         => "SYSTEM_SYNCHRONOUS",
     PHASE_SHIFT           => 0,
     STARTUP_WAIT          => FALSE)
@@ -136,7 +140,7 @@ begin
     CLK90                 => open,
     CLK180                => open,
     CLK270                => open,
-    CLK2X                 => open,
+    CLK2X                 => clk2x,
     CLK2X180              => open,
     CLKFX                 => clkfx,
     CLKFX180              => open,
@@ -159,22 +163,29 @@ begin
 
   -- Output buffering
   -------------------------------------
-  clkf_buf : BUFG
-  port map
+  clkf_buf : BUFG 
+  port map 
    (O => clkfb,
-    I => clk0);
+    I => clk2x);
 
 
   clkout1_buf : BUFG
   port map
-   (O   => CLK_OUT1,
+   (O   => CLK_12Mhz,
     I   => clkfx);
 
 
 
   clkout2_buf : BUFG
   port map
-   (O   => CLK_OUT2,
+   (O   => clk_out2_internal,
+    I   => clk2x);
+
+  CLK_32Mhz <= clk_out2_internal;
+
+  clkout3_buf : BUFG
+  port map
+   (O   => CLK_1Mhz,
     I   => clkdv);
 
 end xilinx;

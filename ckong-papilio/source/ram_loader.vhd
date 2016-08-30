@@ -24,7 +24,7 @@ signal step_cnt     : integer range 0 to 10 := 0;
 signal next_word    : std_logic := '0';
 
 signal do_prog                 : std_logic_vector(7 downto 0);
-signal do_prog2                 : std_logic_vector(7 downto 0);
+signal do_prog2                : std_logic_vector(7 downto 0);
 signal do_tile_bit0            : std_logic_vector(7 downto 0);
 signal do_tile_bit1            : std_logic_vector(7 downto 0);
 signal do_big_sprite_tile_bit0 : std_logic_vector(7 downto 0);
@@ -116,7 +116,7 @@ begin
 						if rd_addr = X"3" then
 							wr_addr <= (others => '0');
 							loading <= '1';
-						elsif rd_addr = X"FF" then
+						elsif rd_addr = X"FFF" then
 							wr_addr <= "0" & X"0000";  -- program start address
 							rd_addr <= (others => '0');
 							step_cnt <= step_cnt + 1;

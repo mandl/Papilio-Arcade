@@ -59,7 +59,7 @@ signal video_b      : std_logic_vector(1 downto 0);
 
 
 
-signal sound_string : std_logic_vector(12 downto 0);
+signal sound_string : std_logic_vector(7 downto 0);
 signal dac_o        : std_logic := '0';
 
 signal reset        : std_logic;
@@ -158,9 +158,7 @@ signal sram_data_to_cpu : std_logic_vector(7 downto 0);
 -- data bus from AY-3-8910
 signal ym_8910_data : std_logic_vector(7 downto 0);
 
--- keyboard to joystick
-signal kbd_int       : std_logic;
-signal kbd_scan_code : unsigned(7 downto 0);
+-- joystick
 signal joy_pcfrldu   : std_logic_vector(6 downto 0) := (others => '0');
 
 -- player I/O : one player only atm
@@ -623,13 +621,14 @@ end process;
 
 -------------------------------------------------
 
---m_dac : entity work.dac
---generic map(msbi_g  => 12)
---port map(
---		clk_i => CLK_48mhz,
---		res_n_i => '1',
---		dac_i   => sound_string,
---		dac_o   => dac_o);
+m_dac : entity work.dac
+generic map(msbi_g  => 7)  -- 8 bit DAC
+port map(
+		clk_i   => CLK_48mhz,
+		res_n_i => reset,
+		--dac_i   => sound_string,
+		dac_i   => ( others => '0'),
+		dac_o   => dac_o);
 -------------------------------------------------
 		
 m_clock : entity work.clock

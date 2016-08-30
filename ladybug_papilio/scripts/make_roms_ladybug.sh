@@ -41,10 +41,10 @@ $romgen_path/romgen $rom_path_src/10-3.c4     prom_10_3     5 a r > $rom_path/pr
 #$romgen_path/romgen $rom_path_src/10-1.f4     prom_10_1     5 b r > $rom_path/prom_10_1.vhd
 #$romgen_path/romgen $rom_path_src/10-2.k1     prom_10_2     5 b r > $rom_path/prom_10_2.vhd
 #$romgen_path/romgen $rom_path_src/10-3.c4     prom_10_3     5 b r > $rom_path/prom_10_3.vhd
-$romgen_path/romgen $rom_path/cpu1.bin        rom_cpu1     13 l r > $rom_path/cpu1.vhd
-$romgen_path/romgen $rom_path/cpu2.bin        rom_cpu2     13 l r > $rom_path/cpu2.vhd
-$romgen_path/romgen $rom_path/cpu3.bin        rom_cpu3     13 l r > $rom_path/cpu3.vhd
-$romgen_path/romgen $rom_path_src/l8.l7       rom_sprite_l 12 l r > $rom_path/rom_sprite_l.vhd
-$romgen_path/romgen $rom_path_src/l7.m7       rom_sprite_u 12 l r > $rom_path/rom_sprite_u.vhd
-$romgen_path/romgen $rom_path_src/l9.f7       rom_char_l   12 l r > $rom_path/rom_char_l.vhd
-$romgen_path/romgen $rom_path_src/l0.h7       rom_char_u   12 l r > $rom_path/rom_char_u.vhd
+$romgen_path/romgen $rom_path/cpu1.bin        rom_cpu1     13 a r > $rom_path/cpu1.vhd
+$romgen_path/romgen $rom_path/cpu2.bin        rom_cpu2     13 a r > $rom_path/cpu2.vhd
+$romgen_path/romgen $rom_path/cpu3.bin        rom_cpu3     13 a r > $rom_path/cpu3.vhd
+$romgen_path/romgen $rom_path_src/l8.l7       rom_sprite_l 12 a r > $rom_path/rom_sprite_l.vhd
+$romgen_path/romgen $rom_path_src/l7.m7       rom_sprite_u 12 a r > $rom_path/rom_sprite_u.vhd
+$romgen_path/romgen $rom_path_src/l9.f7       rom_char_l   12 a r > $rom_path/rom_char_l.vhd
+$romgen_path/romgen $rom_path_src/l0.h7       rom_char_u   12 a r > $rom_path/rom_char_u.vhd

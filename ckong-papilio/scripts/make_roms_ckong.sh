@@ -31,8 +31,8 @@ $romgen_path/romgen $rom_path/ckong_tile1.bin ckong_tile_bit1 13 l r > $rom_path
 $romgen_path/romgen $rom_path_src/2.11c ckong_big_sprite_tile_bit0 11 l r > $rom_path/ckong_big_sprite_tile_bit0.vhd
 $romgen_path/romgen $rom_path_src/1.11a ckong_big_sprite_tile_bit1 11 l r > $rom_path/ckong_big_sprite_tile_bit1.vhd
 
-$romgen_path/romgen $rom_path/ckong_palette.bin ckong_palette 6 a r > $rom_path/ckong_palette.vhd 
-$romgen_path/romgen $rom_path_src/prom.t6 ckong_big_sprite_palette 5 a r > $rom_path/ckong_big_sprite_palette.vhd
+$romgen_path/romgen $rom_path/ckong_palette.bin ckong_palette 6 l r > $rom_path/ckong_palette.vhd 
+$romgen_path/romgen $rom_path_src/prom.t6 ckong_big_sprite_palette 5 l r > $rom_path/ckong_big_sprite_palette.vhd
 $romgen_path/romgen $rom_path/ckong_samples.bin  ckong_samples 13 l r > $rom_path/ckong_samples.vhd
 
 

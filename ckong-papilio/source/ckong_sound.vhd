@@ -14,7 +14,7 @@ port	(
 	reg5_we_n    : in std_logic;
 	reg6_we_n    : in std_logic;
 	ym_2149_data : out std_logic_vector(7 downto 0);
-	sound_sample : out std_logic_vector(12 downto 0)
+	sound_sample : out std_logic_vector(7 downto 0)
 );
 end ckong_sound;
 
@@ -108,8 +108,8 @@ sample_rom_addr <= sample_start1(7 downto 6) & sample_cnt(11 downto 1);
 
 sample_data <= sound_data(3 downto 0) when sample_cnt(0) = '0' else sound_data(7 downto 4);  -- 4 bit
 
-sound_sample <= std_logic_vector(( "0" & unsigned(ym_2149_audio) & "0000") + unsigned(sample_data & "000000000"));
-------
+--sound_sample <= std_logic_vector(( "0" & unsigned(ym_2149_audio) & "0000") + unsigned(sample_data & "000000000"));
+sound_sample <= ym_2149_audio;
 
 sample_rom : entity work.ckong_samples
 port map (

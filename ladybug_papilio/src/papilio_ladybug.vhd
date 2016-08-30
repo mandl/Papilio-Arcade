@@ -65,12 +65,10 @@ port (
 	-- Audio Interface --------------------------------------------------------
 	O_AUDIO_L    : out   std_logic;
 	O_AUDIO_R    : out   std_logic;
-	-- Key Pad Interface -----------------------------------------------------
-	PS2CLK1      : inout std_logic;
-	PS2DAT1      : inout std_logic;
+
 	--- Joystick Interface ----------------------------
 	I_SW          : in    std_logic_vector(8 downto 0);
-	JOYSTICK_GND      : out   std_logic
+	JOYSTICK_GND  : out   std_logic
 );
 end papilio_ladybug;
 
@@ -134,6 +132,7 @@ architecture struct of papilio_ladybug is
 	signal button_in        : std_logic_vector(8 downto 0);
    signal button_debounced : std_logic_vector(8 downto 0);
 	signal Buttons         : std_logic_vector(8 downto 0);
+	
 	
 
 begin
@@ -319,6 +318,8 @@ begin
 	-----------------------------------------------------------------------------
 	-- Game ROMs
 	-----------------------------------------------------------------------------
+	
+		
 	inst_rom_spritel : entity work.rom_sprite_l
 	port map (
 		CLK         => clk_20mhz_s,

@@ -43,7 +43,7 @@ cp ../roms/dummy_prom_decrypt.vhd $rom_path/prom_decrypt.vhd
 
 
 $romgen_path/romgen $rom_path_src/10-1.f4     prom_10_1     5 m r > $rom_path/prom_10_1.mem
-$romgen_path/romgen $rom_path_src/10-2.k1     prom_10_2     5 m r > $rom_path/prom_10_2.men
+$romgen_path/romgen $rom_path_src/10-2.k1     prom_10_2     5 m r > $rom_path/prom_10_2.mem
 $romgen_path/romgen $rom_path_src/10-3.c4     prom_10_3     5 m r > $rom_path/prom_10_3.mem
 $romgen_path/romgen $rom_path/cpu1.bin        INST_ROM_CPU1     13 m r  > $rom_path/INST_ROM_CPU1.mem
 $romgen_path/romgen $rom_path/cpu2.bin        INST_ROM_CPU2     13 m r  > $rom_path/INST_ROM_CPU2.mem
@@ -61,8 +61,8 @@ $data2mem_path/data2mem -bm $src_path/ladybug_bd.bmm -bt $rom_path/out3.bit -bd 
 $data2mem_path/data2mem -bm $src_path/ladybug_bd.bmm -bt $rom_path/out4.bit -bd $rom_path/rom_sprite_u.mem tag avrmap.rom_sprite_u -o b $rom_path/out5.bit
 $data2mem_path/data2mem -bm $src_path/ladybug_bd.bmm -bt $rom_path/out5.bit -bd $rom_path/rom_char_l.mem tag avrmap.rom_char_l -o b $rom_path/out6.bit
 $data2mem_path/data2mem -bm $src_path/ladybug_bd.bmm -bt $rom_path/out6.bit -bd $rom_path/rom_char_u.mem tag avrmap.rom_char_u -o b $rom_path/out7.bit
-#$data2mem_path/data2mem -bm $rom_path/ladybug_bd.bmm -bt $rom_path/out7.bit -bd $rom_path/prom_10_1.mem tag avrmap.INST_ROM_CHARU -o b $rom_path/out8.bit
-#$data2mem_path/data2mem -bm $rom_path/ladybug_bd.bmm -bt $rom_path/out8.bit -bd $rom_path/prom_10_2.mem tag avrmap.INST_ROM_CHARU -o b $rom_path/out9.bit
-#$data2mem_path/data2mem -bm $rom_path/ladybug_bd.bmm -bt $rom_path/out9.bit -bd $rom_path/prom_10_3.mem tag avrmap.INST_ROM_CHARU -o b $rom_path/out10.bit
+$data2mem_path/data2mem -bm $src_path/ladybug_bd.bmm -bt $rom_path/out7.bit -bd $rom_path/prom_10_1.mem tag avrmap.prom_10_1 -o b $rom_path/out8.bit
+$data2mem_path/data2mem -bm $src_path/ladybug_bd.bmm -bt $rom_path/out8.bit -bd $rom_path/prom_10_2.mem tag avrmap.prom_10_2 -o b $rom_path/out9.bit
+$data2mem_path/data2mem -bm $src_path/ladybug_bd.bmm -bt $rom_path/out9.bit -bd $rom_path/prom_10_3.mem tag avrmap.prom_10_3 -o b $rom_path/out10.bit
 
 

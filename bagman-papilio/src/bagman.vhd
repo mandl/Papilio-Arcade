@@ -48,8 +48,9 @@ architecture struct of bagman is
 -- clocks
 signal clock_12mhz  : std_logic := '0';
 signal clock_1mhz   : std_logic := '0';
+signal clock_32mhz   : std_logic := '0';
 
-signal sound_string : std_logic_vector(12 downto 0);
+signal sound_string : std_logic_vector(10 downto 0);
 
 signal sram_we      : std_logic;
 
@@ -130,8 +131,8 @@ signal ym_8910_data : std_logic_vector(7 downto 0);
 
 -- audio
 signal ym_8910_audio : std_logic_vector(7 downto 0);
-signal music         : unsigned(12 downto 0);
-signal speech        : unsigned(12 downto 0);
+signal music         : unsigned(10 downto 0);
+signal speech        : unsigned(10 downto 0);
 signal speech_sample : integer range -512 to 511;
 --
 -- keyboard to joystick
@@ -155,28 +156,29 @@ signal dac_o  : std_logic := '0';
 signal reset : std_logic := '0';
 begin
 
-
-
 m_clock : entity work.clock
-port map
+  port map
    (-- Clock in ports
     CLK_IN1 => CLK_IN,
     -- Clock out ports
-    CLK_OUT1 => clock_12mhz,
-	 CLK_OUT2 => clock_1mhz,
+    CLK_12Mhz => clock_12mhz,
+    CLK_32Mhz => clock_32mhz,
+    CLK_1Mhz  => clock_1mhz,
     -- Status and control signals
     RESET  => RESET2,
     LOCKED => LOCKED);
-	 
+
 ----------------------------------------------------
 
 m_dac : entity work.dac
-generic map(msbi_g  => 12)
+generic map(msbi_g  => 7)     -- 8 bit DAC
 port map(
-		clk_i => clock_12mhz,
+		clk_i   => clock_32mhz,
 		res_n_i => reset,
-		dac_i   => sound_string,
+		dac_i   => sound_string(10 downto 3),
 		dac_o   => dac_o);
+
+
 ------------------
 -- video output
 ------------------
@@ -272,8 +274,8 @@ with cpu_iorq_n select
 -----------------------
 -- mux sound and music
 -----------------------
-speech       <= "0" & to_unsigned((speech_sample+512),10) & "00";
-music        <= "0000" & unsigned(ym_8910_audio) & '0';
+speech       <= to_unsigned((speech_sample+512),10) & '0';
+music        <= "000" & unsigned(ym_8910_audio);
 sound_string <= std_logic_vector(music + speech);
 
 
@@ -489,6 +491,8 @@ port map (
 	cpu_clock  => cpu_clock
 );
 
+---------------------------------------------------------------------
+
 line_doubler : entity work.line_doubler
 port map(
 	clock_12mhz => clock_12mhz,
@@ -500,6 +504,7 @@ port map(
 	vsync_o     => vsync_o
 );
 
+---------------------------------------------------------------------
 palette : entity work.bagman_palette
 port map (
 	addr => pixel_color_r,
@@ -585,8 +590,8 @@ port map(
 ------------------------------------------- use internal sram loader
 ram_loader : entity work.ram_loader
 port map(
-clock    => clock_12mhz,
-reset    => reset,
+   clock    => clock_12mhz,
+   reset    => reset,
 	address  => load_addr,
 	data     => load_data,
 	we       => load_we,
