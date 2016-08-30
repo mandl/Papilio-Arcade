@@ -43,6 +43,10 @@
 *_summary.xml
 *_usage.xml
 *_xst.xrpt
+*bd.bmm
+
+papilio-prog
+romgen
 
 # project-wide generated files
 *.gise

@@ -1,0 +1,167 @@
+
+
+ADDRESS_MAP avrmap PPC405 0
+
+  	  
+    ADDRESS_SPACE ROM_1J RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	        inst_rom_spritel/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	        inst_rom_spritel/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;	
+
+    ADDRESS_SPACE ROM_1L RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	        inst_rom_spriteu/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	        inst_rom_spriteu/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;	
+
+    ADDRESS_SPACE ROM_1M RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	       inst_rom_charl/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	       inst_rom_charl/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE ROM_1N RAMB16 [0x00000000:0x00000fff]
+        BUS_BLOCK
+	      inst_rom_charu/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	      inst_rom_charu/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE ROM_1R RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu1/rom0.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu1/rom1.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu1/rom2.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu1/rom3.inst [7:0];
+		  END_BUS_BLOCK;
+		  
+		  
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE ROM_3H RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu2/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu2/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu2/rom2.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu2/rom3.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+	 
+	 ADDRESS_SPACE ROM_4P RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu3/rom1.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu3/rom2.inst [7:0];
+        END_BUS_BLOCK;
+		  
+		  BUS_BLOCK
+	     inst_rom_cpu3/rom3.inst [7:0];
+        END_BUS_BLOCK;
+		  
+    END_ADDRESS_SPACE;		 
+
+
+    ADDRESS_SPACE ROM_7J RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;	
+
+     ADDRESS_SPACE ROM_7L RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;	
+
+      ADDRESS_SPACE ROM_7M RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;	
+
+    ADDRESS_SPACE ROM_8H RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;	
+
+       ADDRESS_SPACE ROM_8K RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;	
+
+     ADDRESS_SPACE ROM_8L RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;	
+
+    ADDRESS_SPACE ROM_8N RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;
+
+    ADDRESS_SPACE ROM_8R RAMB16 [0x00000000:0x00001fff]
+        BUS_BLOCK
+	     inst_rom_cpu3/rom0.inst [7:0];
+        END_BUS_BLOCK;
+  
+    END_ADDRESS_SPACE;		
+
+	 
+END_ADDRESS_MAP;
