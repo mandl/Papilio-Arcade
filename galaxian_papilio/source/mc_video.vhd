@@ -126,7 +126,7 @@ architecture RTL of MC_VIDEO is
 	signal W_VID_RAM_DOA  : std_logic_vector( 7 downto 0) := (others => '0');
 	signal W_VID_RAM_DOB  : std_logic_vector( 7 downto 0) := (others => '0');
 	signal W_HF_CNT       : std_logic_vector( 7 downto 0) := (others => '0');
-	signal W_45N_Q        : std_logic_vector( 8 downto 0) := (others => '0');
+	signal W_45N_Q        : std_logic_vector( 7 downto 0) := (others => '0');
 	signal W_6J_Q         : std_logic_vector( 3 downto 0) := (others => '0');
 	signal W_6J_DA        : std_logic_vector( 3 downto 0) := (others => '0');
 	signal W_6J_DB        : std_logic_vector( 3 downto 0) := (others => '0');
@@ -224,8 +224,8 @@ begin
 	port map (
 		CLK  => I_CLK_12M,
 		ADDR => W_O_OBJ_ROM_A,
-		DATA => W_1K_D,
-		ENA  => '1'
+		DATA => W_1K_D
+		--ENA  => '1'
 	);
 
 --1H VID-Rom
@@ -234,8 +234,8 @@ begin
 	port map(
 		CLK  => I_CLK_12M,
 		ADDR => W_O_OBJ_ROM_A,
-		DATA => W_1H_D,
-		ENA  => '1'
+		DATA => W_1H_D
+		--ENA  => '1'
 	);
 
 -----------------------------------------------------------------------------------
@@ -289,7 +289,7 @@ begin
 	end process;
 
 --   Parts  4,5N
-	W_45N_Q <= (W_VF_CNT + W_H_POSI) & '0';
+	W_45N_Q <= (W_VF_CNT + W_H_POSI) ;
 	W_3D    <= '0' when W_45N_Q(7 downto 0) = x"ff" else '1'; 
 
 	process(W_VPLn, I_V_BLn)

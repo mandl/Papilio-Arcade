@@ -25,8 +25,8 @@ begin
 	port map (
 		CLK  => I_ROM_CLK,
 		ADDR => I_ADDR(13 downto 0),
-		DATA => ROM_D,
-		ENA  => '1'
+		DATA => ROM_D
+		--ENA  => '1'
 	);
 
 --    address map
