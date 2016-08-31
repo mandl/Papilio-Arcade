@@ -72,7 +72,15 @@ entity PAPILIO_DUO_TOP is
 		SW_DOWN  : in		std_logic;
 
 		-- 32MHz clock
-		CLK_IN		: in		std_logic := '0'						-- System clock 32Mhz
+		CLK_IN		: in		std_logic := '0';						-- System clock 32Mhz
+		
+		-- SD Card not used. But with inserted card. System hangs
+		SD_MISO   : in   std_logic; -- Master In Slave Out
+      SD_CD     : in   std_logic; -- Card Detect 
+      SD_MOSI   : out  std_logic; -- Master Out Slave In
+      SD_SCK    : out  std_logic; -- clk
+      SD_nCS    : out  std_logic  -- Chip Select 
+
 
 	);
 end PAPILIO_DUO_TOP;
@@ -182,6 +190,9 @@ architecture RTL of PAPILIO_DUO_TOP is
 
 	signal ps2_codeready		: std_logic := '1';
 	signal ps2_scancode		: std_logic_vector( 9 downto 0) := (others => '0');
+	
+	signal MISO_SD : std_logic;  
+   signal CD_SD   : std_logic;
 
 	-- buttons
 	signal
@@ -218,14 +229,20 @@ begin
 	-- SRAM muxer, allows access to physical SRAM by either bootstrap or user
 	SRAM_D	<=  bs_Dout	when bootstrap_done = '0' and bs_nWE = '0'	else (others => 'Z'); -- no need for user write
 	SRAM_A	<= "000" & bs_A					when bootstrap_done = '0'							else "0000" & user_A;
-	SRAM_nCS	<= '0'; --bs_nCS				when bootstrap_done = '0'							else user_nCS;
+	SRAM_nCS	<= '0';
 	SRAM_nWE	<= bs_nWE				when bootstrap_done = '0'							else user_nWE;
 	SRAM_nOE	<= bs_nOE				when bootstrap_done = '0'							else user_nOE;
 
-	---SRAM_nBE	<= '0';						-- nUB and nLB tied together, SRAM always in 16 bit mode, grrr!
 	user_Din	<= SRAM_D( 7 downto 0);	-- anyone can read SRAM_D without contention but his provides some logical separation
+	
+	-- SD Card not used
+		
+	MISO_SD  <= SD_MISO;  -- Master In Slave Out
+   CD_SD    <= SD_CD;    -- Card Detect 
+   SD_MOSI  <= '0';      -- Master Out Slave In
+   SD_SCK   <= '0';      -- clk
+   SD_nCS   <= '1';      -- Chip Select disable
 
-	-- using the user's DCM for clocking
 
 	u_bs : entity work.bootstrap
 	port map (
@@ -334,6 +351,7 @@ begin
 		O_VSYNC				=> s_vsync_n,
 		O_CMPBLK_n			=> s_cmpblk_n,
 
+		
 		-- external ROMs
 		I_ROM_4P_DATA		=> i_rom_4P_data,
 		O_ROM_4P_ADDR		=> o_rom_4P_addr,
