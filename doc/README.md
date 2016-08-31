@@ -21,6 +21,7 @@ Sample:
 
 ![Result Dialog](PlanAhead.png)
 
+**ISE Hierarchy**
 
 ![Result Dialog](ise.png)
 
