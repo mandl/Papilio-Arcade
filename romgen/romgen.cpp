@@ -12,7 +12,7 @@ using namespace std;
 #define VER_MIN 4
 #define MAX_ROM_SIZE 0x4000
 
-#define NO_ROM_DATA
+//#define NO_ROM_DATA
 
 int main(int argc, char* argv[])
 
